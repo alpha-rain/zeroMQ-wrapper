@@ -1,3 +1,45 @@
 Just a simple wraper i made around zeroMQ for easy reuse
 
 what you need:
+	First you need get c++ zeroMQ bindings:https://github.com/zeromq/cppzmq
+	put this in the where coms lives
+	Also need to have zeroMQ installed, i found this guide usefull for linux:
+	http://conoroneill.net/running-zeromq-with-node-js-on-raspberry-pi/
+	
+runing:
+quick on the api constructor:
+	1st param: type of connection
+	2nd param: network address
+	3rd "s" for server, "c" for client
+simple server client(ZMQ_REP,ZMQ_REQ):
+	Server:
+		Coms coms(ZMQ_REP,"tcp://*:420","s");
+		for(;;)
+		{
+			cout<<coms.get()<<endl;
+			coms.send("bye");
+		}
+	Client:
+		Coms coms(ZMQ_REQ,"tcp://127.0.0.1:420", "c");
+		for(int i = 0;i < 10;i++)
+		{
+			coms.send("Hi dude");
+			cout<<coms.get()<<endl;
+		}
+simple server client(ZMQ_PULL,ZMQ_PUSH):
+	Server:
+		Coms coms(ZMQ_PULL,"tcp://*:420","s");
+		for(;;)
+		{
+			cout<<coms.get()<<endl;
+		}
+	Client:
+		Coms coms(ZMQ_PUSH,"tcp://127.0.0.1:420", "c");
+		for(int i = 0;i < 10;i++)
+		{
+			coms.send("Hi dude");
+		}
+
+Things todo still:
+	-add function to close port from zeromq
+	-think on what to add
